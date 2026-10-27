@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+
+  <meta charset="UTF-8" />
+  <title>Music Store</title>
+  <script defer src="app.js"></script>
+  <style>
+    body { font-family: Arial; max-width: 800px; margin: 40px auto; }
+    input, button { padding: 8px; margin: 5px 0; width: 100%; }
+    .card { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+<button class="btn btn-primary">Login</button>
+
+<h1>🎸 Music Store</h1>
+
+<h2>Login</h2>
+<input id="email" placeholder="email" />
+<input id="password" type="password" placeholder="password" />
+<button onclick="login()">Login</button>
+
+<hr/>
+
+<h2>Products</h2>
+<button onclick="loadProducts()">Load products</button>
+<div id="products"></div>
+
+<hr/>
+
+<h2>Create Order</h2>
+<input id="productId" placeholder="Product ID" />
+<input id="qty" placeholder="Qty" value="1" />
+<button onclick="createOrder()">Create order</button>
+
+<pre id="result"></pre>
+
+</body>
+</html>
+
