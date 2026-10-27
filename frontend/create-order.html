@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="style.css">
+
+
+  <meta charset="UTF-8" />
+  <title>Create Order</title>
+  <script src="app.js"></script>
+  <style>
+    body { font-family: Arial; max-width: 900px; margin: 40px auto; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+    select, input, button { padding: 10px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 10px 0; }
+    pre { background:#f6f6f6; padding:10px; border-radius:8px; overflow:auto; }
+  </style>
+</head>
+
+<body>
+  <h1>Create Order</h1>
+  <div id="nav"></div>
+
+  <div class="card">
+    <div class="row">
+      <select id="productSelect" style="min-width:320px;"></select>
+      <input id="qty" type="number" min="1" value="1" style="width:100px;">
+      <button onclick="createOrder()">Create</button>
+    </div>
+  </div>
+
+  <pre id="out"></pre>
+
+  <script>
+    requireAuth();
+    document.getElementById("nav").innerHTML = navHTML();
+
+    async function loadProductsToSelect() {
+      const data = await apiFetch("/products");
+      const sel = document.getElementById("productSelect");
+      sel.innerHTML = "";
+      data.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p._id;
+        opt.textContent = `${p.name} (${p.price})`;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function createOrder() {
+      try {
+        const productId = document.getElementById("productSelect").value;
+        const qty = Number(document.getElementById("qty").value || 1);
+
+        const data = await apiFetch("/orders", {
+          method: "POST",
+          body: { items: [{ productId, qty }] }
+        });
+
+        document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+        alert("Order created!");
+      } catch (e) {
+        document.getElementById("out").textContent = JSON.stringify(e, null, 2);
+        alert(e.message || "Error");
+      }
+    }
+
+    loadProductsToSelect();
+  </script>
+</body>
+</html>
+
