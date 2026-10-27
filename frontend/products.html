@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+ <link rel="stylesheet" href="style.css">
+
+
+  <meta charset="UTF-8" />
+  <title>Products</title>
+  <script src="app.js"></script>
+  <style>
+    body { font-family: Arial; max-width: 900px; margin: 40px auto; }
+    .card { border: 1px solid #000000; border-radius: 10px; padding: 12px; margin: 10px 0; }
+    button { padding: 8px; }
+    pre { background:#ffd900; padding:10px; border-radius:8px; overflow:auto; }
+  </style>
+</head>
+
+<body>
+  <h1>Products</h1>
+  <div id="nav"></div>
+  <button onclick="loadProducts()">Load products</button>
+  <div id="list"></div>
+  <pre id="out"></pre>
+
+  <script>
+    requireAuth();
+    document.getElementById("nav").innerHTML = navHTML();
+
+    async function loadProducts() {
+      try {
+        const data = await apiFetch("/products");
+        document.getElementById("out").textContent = `Loaded: ${data.length}`;
+
+        const list = document.getElementById("list");
+        list.innerHTML = "";
+
+        data.forEach(p => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.innerHTML = `
+            <b>${p.name}</b> (${p.category || "-"})<br/>
+            Price: ${p.price} | Stock: ${p.stock}<br/>
+            <small>ID: ${p._id}</small>
+          `;
+          list.appendChild(div);
+        });
+      } catch (e) {
+        document.getElementById("out").textContent = JSON.stringify(e, null, 2);
+        alert(e.message || "Error");
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
+
