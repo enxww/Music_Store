@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+   <link rel="stylesheet" href="style.css">
+
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <script src="app.js"></script>
+  <style>
+    body { font-family: Arial; max-width: 500px; margin: 40px auto; }
+    input, button { padding: 10px; width: 100%; margin: 6px 0; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+    pre { background:#f6f6f6; padding:10px; border-radius:8px; overflow:auto; }
+  </style>
+  
+</head>
+<body>
+  <h1>Login</h1>
+  <div class="card">
+    <input id="email" placeholder="email" value="test1@mail.com" />
+    <input id="password" type="password" placeholder="password" value="123456" />
+    <button onclick="doLogin()">Login</button>
+    <pre id="out"></pre>
+  </div>
+
+  <script>
+    async function doLogin() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const data = await apiFetch("/auth/login", {
+          method: "POST",
+          body: { email, password }
+        });
+
+        document.getElementById("out").textContent = JSON.stringify(data, null, 2);
+
+        if (data.token) {
+          setToken(data.token);
+          window.location.href = "products.html";
+        }
+      } catch (e) {
+        document.getElementById("out").textContent = JSON.stringify(e, null, 2);
+        alert(e.message || "Login error");
+      }
+    }
+  </script>
+</body>
+</html>
+
